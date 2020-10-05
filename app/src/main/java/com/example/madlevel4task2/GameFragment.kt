@@ -1,5 +1,7 @@
 package com.example.madlevel4task2
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,7 +14,13 @@ import com.example.madlevel4task2.repository.GameRepository
 import kotlinx.android.synthetic.main.fragment_game.*
 import kotlinx.android.synthetic.main.fragment_game.ivComputer
 import kotlinx.android.synthetic.main.item_game.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
+
+const val HISTORY_CLEAR_CODE = 100
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -31,6 +39,7 @@ class GameFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
 
         gameRepository = GameRepository(requireContext())
@@ -66,6 +75,7 @@ class GameFragment : Fragment() {
         else if (game.result == Game.Result.WIN) {
             tvResult.text = getString(R.string.you_win)
         }
+        addGameToDatabase(game)
     }
 
     private fun getImageId(choice: Game.Choice): Int {
@@ -108,5 +118,26 @@ class GameFragment : Fragment() {
             }
         }
         return result
+    }
+    private fun addGameToDatabase(game: Game) {
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
+                gameRepository.insertGame(game)
+            }
+            getStatisticsFromDatabase()
+        }
+    }
+    private fun getStatisticsFromDatabase() {
+        CoroutineScope(Dispatchers.Main).launch {
+            var wins = 0
+            var draws = 0
+            var losses = 0
+            withContext(Dispatchers.IO) {
+                wins = gameRepository.getNumberOfWins()
+                draws = gameRepository.getNumberOfDraws()
+                losses = gameRepository.getNumberOfLosses()
+            }
+            tvStatistics.text = getString(R.string.statistics, wins, draws, losses)
+        }
     }
 }

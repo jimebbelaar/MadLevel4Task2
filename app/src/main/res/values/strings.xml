@@ -18,4 +18,5 @@
     <string name="you_lose">You Lose</string>
     <string name="draw">Draw</string>
     <string name="you_win">You win</string>
+    <string name="statistics">Win: %d  Draw: %d  Lose: %d</string>
 </resources>
