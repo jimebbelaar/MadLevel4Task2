@@ -5,10 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import com.example.madlevel4task2.model.Game
 import com.example.madlevel4task2.repository.GameRepository
 import kotlinx.android.synthetic.main.fragment_game.*
+import kotlinx.android.synthetic.main.fragment_game.ivComputer
+import kotlinx.android.synthetic.main.item_game.*
 import java.util.*
 
 /**
@@ -22,6 +25,7 @@ class GameFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_game, container, false)
     }
@@ -50,12 +54,19 @@ class GameFragment : Fragment() {
             checkResult(userChoice, computerInput),
             Date()
         )
-//        ivComputer.setImageDrawable(getDrawable(getImageId(computerInput)))
-    }
+        ivComputer.setImageDrawable(getDrawable(requireContext(), game.computerChoice))
+        ivYou.setImageDrawable(getDrawable(requireContext(), game.playerChoice))
 
-//    private fun setResult(game:Game){
-//        ivComputer.setImageDrawable(getDrawable(game.computerChoice))
-//    }
+        if (game.result == Game.Result.LOSS) {
+            tvResult.text = getString(R.string.you_lose)
+        }
+        else if (game.result == Game.Result.DRAW) {
+            tvResult.text = getString(R.string.draw)
+        }
+        else if (game.result == Game.Result.WIN) {
+            tvResult.text = getString(R.string.you_win)
+        }
+    }
 
     private fun getImageId(choice: Game.Choice): Int {
 
