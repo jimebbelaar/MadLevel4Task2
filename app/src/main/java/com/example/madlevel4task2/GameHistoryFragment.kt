@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.madlevel4task2.adapter.GameAdapter
 import com.example.madlevel4task2.model.Game
 import com.example.madlevel4task2.repository.GameRepository
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_game.*
 import kotlinx.android.synthetic.main.fragment_game_history.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +28,7 @@ class GameHistoryFragment : Fragment() {
 
     private val games = arrayListOf<Game>()
     private val gameAdapter = GameAdapter(games)
+    private var historyCleared = false
 
     private lateinit var gameRepository: GameRepository
 
@@ -33,12 +36,17 @@ class GameHistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_game_history, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        button_third.setOnClickListener {
+            deleteGameHistory()
+        }
 
         initViews()
 
@@ -71,5 +79,14 @@ class GameHistoryFragment : Fragment() {
         }
     }
 
+    private fun deleteGameHistory() {
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
+                gameRepository.deleteAllGames()
+            }
+            historyCleared = true
+            getGamesFromDatabase()
+        }
+    }
 
 }
