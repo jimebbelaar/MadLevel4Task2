@@ -1,6 +1,5 @@
 package com.example.madlevel4task2.adapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -35,19 +34,18 @@ class GameAdapter(private val games: List<Game>) : RecyclerView.Adapter<GameAdap
 
         private val context: Context = itemView.context.applicationContext
 
-        private val tvResult: TextView = itemView.findViewById(R.id.tvResult)
-//        private val tvDate: TextView = itemView.findViewById(R.id.tvDate)
-        private val ivComputer: ImageView = itemView.findViewById(R.id.ivComputer)
-        private val ivYou: ImageView = itemView.findViewById(R.id.ivYou)
+        private val tvResult: TextView = itemView.findViewById(R.id.tvResultItem)
+        private val tvDate: TextView = itemView.findViewById(R.id.tvDateItem)
+        private val ivComputer: ImageView = itemView.findViewById(R.id.ivComputerItem)
+        private val ivYou: ImageView = itemView.findViewById(R.id.ivYouItem)
 
-        @SuppressLint("UseCompatLoadingForDrawables")
         fun bind(game: Game) {
             when (game.result) {
                 Game.Result.LOSS -> tvResult.text = context.getString(R.string.you_lose)
                 Game.Result.DRAW -> tvResult.text = context.getString(R.string.draw)
                 Game.Result.WIN -> tvResult.text = context.getString(R.string.you_win)
             }
-//            tvDate.text = game.date.toString()
+            tvDate.text = game.date.toString()
             ivComputer.setImageDrawable(itemView.context.applicationContext.getDrawable(game.computerChoice))
             ivYou.setImageDrawable(itemView.context.applicationContext.getDrawable(game.playerChoice))
         }
